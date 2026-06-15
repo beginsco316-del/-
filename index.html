@@ -7,7 +7,6 @@
   <meta name="description" content="BEGIN.S DESIGN 인테리어 디자인, 리모델링, 상업공간 설계 및 시공">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="./styles.css">
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
   <header class="site-header" aria-label="상단 메뉴">
@@ -183,18 +182,5 @@
   </div>
 
   <script src="./script.js"></script>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", (user) => {
-        if (!user && window.location.hash.includes("invite_token")) {
-          window.netlifyIdentity.open("signup");
-        }
-      });
-
-      window.netlifyIdentity.on("login", () => {
-        document.location.href = "/admin/";
-      });
-    }
-  </script>
 </body>
 </html>

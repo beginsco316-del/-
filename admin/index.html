@@ -3,11 +3,352 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
   <title>BEGIN.S DESIGN | Admin</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body.admin-page { background: #f4f3ef; }
+    .admin-shell { width: min(1180px, calc(100% - 28px)); place-items: stretch; }
+    .admin-panel { display: grid; gap: 20px; }
+    .admin-toolbar, .admin-tabs, .admin-actions, .admin-row-actions, .gallery-actions {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    }
+    .admin-toolbar { justify-content: space-between; }
+    .admin-tabs button, .admin-actions button, .admin-row-actions button, .gallery-actions button,
+    .download-button, .import-button {
+      min-height: 42px; padding: 0 14px; color: var(--ink); background: #fff;
+      border: 1px solid rgba(22, 23, 19, 0.12); border-radius: 8px; font-weight: 900; cursor: pointer;
+    }
+    .admin-tabs button.is-active { color: #fff; background: var(--green-dark); border-color: var(--green-dark); }
+    .admin-status { min-height: 24px; color: var(--green-dark); font-weight: 900; }
+    .admin-list { display: grid; gap: 14px; }
+    .editor-card {
+      display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px; padding: 16px;
+      background: rgba(255, 255, 255, 0.78); border: 1px solid rgba(22, 23, 19, 0.1); border-radius: 8px;
+    }
+    .editor-preview { overflow: hidden; align-self: start; background: #e8e8e2; border-radius: 8px; aspect-ratio: 4 / 3; }
+    .editor-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .editor-fields { display: grid; gap: 10px; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .admin-field { display: grid; gap: 6px; color: var(--muted); font-size: 13px; font-weight: 900; }
+    .admin-field input, .admin-field textarea, .gallery-item input {
+      width: 100%; min-height: 42px; padding: 10px 12px; color: var(--ink); background: #fff;
+      border: 1px solid rgba(22, 23, 19, 0.16); border-radius: 8px; font: inherit; font-weight: 600;
+    }
+    .admin-field textarea { min-height: 70px; resize: vertical; }
+    .check-row { display: flex; gap: 8px; align-items: center; color: var(--ink); font-weight: 900; }
+    .check-row input { width: 18px; height: 18px; }
+    .gallery-list { display: grid; gap: 8px; padding: 12px; background: rgba(22, 23, 19, 0.04); border-radius: 8px; }
+    .gallery-item { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+    .gallery-item img { height: 54px; object-fit: cover; background: #ddd; border-radius: 6px; }
+    .admin-help {
+      padding: 16px; color: var(--muted); background: rgba(87, 194, 173, 0.12);
+      border: 1px solid rgba(23, 134, 117, 0.18); border-radius: 8px; line-height: 1.7;
+    }
+    .json-area {
+      width: 100%; min-height: 280px; padding: 14px; color: #fff; background: #151713;
+      border: 0; border-radius: 8px; font-family: Consolas, monospace; font-size: 13px; line-height: 1.55;
+    }
+    @media (max-width: 760px) {
+      .editor-card, .field-grid, .gallery-item { grid-template-columns: 1fr; }
+      .editor-preview { width: 100%; }
+    }
+  </style>
 </head>
-<body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<body class="admin-page">
+  <main class="admin-shell">
+    <section class="admin-login" data-admin-login>
+      <img src="../begins-logo.png" alt="BEGIN.S DESIGN 로고">
+      <p class="section-kicker">Admin</p>
+      <h1>관리자 페이지</h1>
+      <p>비밀번호를 입력하면 포토와 프로젝트를 쉽게 수정할 수 있습니다.</p>
+      <form class="admin-password-form" data-login-form>
+        <label>
+          <span>비밀번호</span>
+          <input type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit">들어가기</button>
+        <small class="admin-error" hidden>비밀번호를 다시 확인해주세요.</small>
+      </form>
+      <a class="admin-home-link" href="../index.html">홈으로 돌아가기</a>
+    </section>
+
+    <section class="admin-panel" data-admin-panel hidden>
+      <div class="admin-toolbar">
+        <div>
+          <p class="section-kicker">Content Editor</p>
+          <h1>포토 / 프로젝트 수정</h1>
+          <p>카드에서 제목과 이미지 주소를 바꾸고, 마지막에 JSON 파일을 내려받아 `data/site-content.json`과 교체하세요.</p>
+        </div>
+        <a class="admin-home-link" href="../index.html">사이트 보기</a>
+      </div>
+
+      <div class="admin-help">
+        이미지는 `/project-assets/파일명.jpg`처럼 사이트 안 파일 경로를 쓰거나, `https://...` 이미지 주소를 넣으면 됩니다. 이 페이지는 정적 사이트용 편집기라서 저장 버튼은 파일을 내려받는 방식으로 동작합니다.
+      </div>
+
+      <div class="admin-tabs" role="tablist" aria-label="편집 대상">
+        <button class="is-active" type="button" data-tab="photos">Photo</button>
+        <button type="button" data-tab="projects">Project</button>
+        <button type="button" data-tab="json">JSON 확인</button>
+      </div>
+
+      <div class="admin-actions">
+        <button type="button" data-add>새 항목 추가</button>
+        <button type="button" data-export>JSON 파일 다운로드</button>
+        <label class="import-button">
+          JSON 불러오기
+          <input type="file" accept=".json,application/json" data-import hidden>
+        </label>
+        <span class="admin-status" data-status></span>
+      </div>
+
+      <div class="admin-list" data-list></div>
+      <textarea class="json-area" data-json hidden spellcheck="false"></textarea>
+    </section>
+  </main>
+
+  <script>
+    const password = "begins316";
+    const state = { content: { photos: [], projects: [] }, tab: "photos" };
+    const login = document.querySelector("[data-admin-login]");
+    const panel = document.querySelector("[data-admin-panel]");
+    const loginForm = document.querySelector("[data-login-form]");
+    const error = document.querySelector(".admin-error");
+    const list = document.querySelector("[data-list]");
+    const jsonArea = document.querySelector("[data-json]");
+    const status = document.querySelector("[data-status]");
+
+    const normalizePath = (path) => {
+      if (!path) return "";
+      if (/^(https?:|data:|\/\/)/.test(path)) return path;
+      return path.startsWith("/") ? ".." + path : "../" + path.replace(/^\.\//, "");
+    };
+
+    const setStatus = (message) => {
+      status.textContent = message;
+      window.clearTimeout(setStatus.timer);
+      setStatus.timer = window.setTimeout(() => { status.textContent = ""; }, 2600);
+    };
+
+    const render = () => {
+      document.querySelectorAll("[data-tab]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.tab === state.tab);
+      });
+      jsonArea.hidden = state.tab !== "json";
+      list.hidden = state.tab === "json";
+      document.querySelector("[data-add]").hidden = state.tab === "json";
+      if (state.tab === "json") {
+        jsonArea.value = JSON.stringify(state.content, null, 2);
+        return;
+      }
+      list.innerHTML = "";
+      (state.content[state.tab] || []).forEach((item, index) => list.append(createEditorCard(item, index)));
+    };
+
+    const updateItem = (index, key, value) => {
+      state.content[state.tab][index][key] = value;
+    };
+
+    const moveItem = (index, direction) => {
+      const items = state.content[state.tab];
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= items.length) return;
+      [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
+      render();
+    };
+
+    const button = (text, onClick) => {
+      const element = document.createElement("button");
+      element.type = "button";
+      element.textContent = text;
+      element.addEventListener("click", onClick);
+      return element;
+    };
+
+    const createInput = (labelText, value, onChange, multiline = false) => {
+      const label = document.createElement("label");
+      label.className = "admin-field";
+      label.append(labelText);
+      const input = document.createElement(multiline ? "textarea" : "input");
+      input.value = value || "";
+      input.addEventListener("input", () => onChange(input.value));
+      input.addEventListener("change", render);
+      label.append(input);
+      return label;
+    };
+
+    const createCheck = (labelText, checked, onChange) => {
+      const label = document.createElement("label");
+      label.className = "check-row";
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = Boolean(checked);
+      input.addEventListener("change", () => {
+        onChange(input.checked);
+        render();
+      });
+      label.append(input, labelText);
+      return label;
+    };
+
+    const createEditorCard = (item, index) => {
+      const card = document.createElement("article");
+      card.className = "editor-card";
+      const preview = document.createElement("div");
+      preview.className = "editor-preview";
+      const img = document.createElement("img");
+      img.src = normalizePath(item.image);
+      img.alt = item.alt || item.title || "";
+      preview.append(img);
+
+      const fields = document.createElement("div");
+      fields.className = "editor-fields";
+      const fieldGrid = document.createElement("div");
+      fieldGrid.className = "field-grid";
+      fieldGrid.append(
+        createInput("제목", item.title, (value) => updateItem(index, "title", value)),
+        createInput("이미지 주소", item.image, (value) => updateItem(index, "image", value)),
+        createInput("대체 설명", item.alt, (value) => updateItem(index, "alt", value), true)
+      );
+
+      if (state.tab === "photos") {
+        fieldGrid.append(createCheck("흑백 사진", item.blackAndWhite, (value) => updateItem(index, "blackAndWhite", value)));
+      } else {
+        fieldGrid.append(createCheck("대표 카드", item.featured, (value) => updateItem(index, "featured", value)));
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "admin-row-actions";
+      actions.append(
+        button("위로", () => moveItem(index, -1)),
+        button("아래로", () => moveItem(index, 1)),
+        button("복제", () => {
+          state.content[state.tab].splice(index + 1, 0, JSON.parse(JSON.stringify(item)));
+          render();
+        }),
+        button("삭제", () => {
+          state.content[state.tab].splice(index, 1);
+          render();
+        })
+      );
+
+      fields.append(fieldGrid);
+      if (state.tab === "projects") fields.append(createGalleryEditor(item));
+      fields.append(actions);
+      card.append(preview, fields);
+      return card;
+    };
+
+    const createGalleryEditor = (item) => {
+      item.gallery = Array.isArray(item.gallery) ? item.gallery : [];
+      const wrap = document.createElement("div");
+      wrap.className = "gallery-list";
+      const title = document.createElement("strong");
+      title.textContent = "상세 이미지";
+      wrap.append(title);
+      item.gallery.forEach((galleryItem, galleryIndex) => {
+        const row = document.createElement("div");
+        row.className = "gallery-item";
+        const thumb = document.createElement("img");
+        thumb.src = normalizePath(galleryItem.image);
+        thumb.alt = galleryItem.alt || "";
+        const input = document.createElement("input");
+        input.value = galleryItem.image || "";
+        input.placeholder = "/project-assets/example.jpg 또는 https://...";
+        input.addEventListener("input", () => {
+          galleryItem.image = input.value;
+          galleryItem.alt = galleryItem.alt || item.alt || item.title || "Project image";
+        });
+        input.addEventListener("change", render);
+        row.append(thumb, input, button("삭제", () => {
+          item.gallery.splice(galleryIndex, 1);
+          render();
+        }));
+        wrap.append(row);
+      });
+      const actions = document.createElement("div");
+      actions.className = "gallery-actions";
+      actions.append(button("상세 이미지 추가", () => {
+        item.gallery.push({ image: "", alt: item.alt || item.title || "Project image" });
+        render();
+      }));
+      wrap.append(actions);
+      return wrap;
+    };
+
+    const loadContent = async () => {
+      try {
+        const response = await fetch("../data/site-content.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("load failed");
+        state.content = await response.json();
+        state.content.photos = state.content.photos || [];
+        state.content.projects = state.content.projects || [];
+        render();
+      } catch {
+        setStatus("데이터를 불러오지 못했습니다. JSON 불러오기를 사용해주세요.");
+      }
+    };
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (loginForm.querySelector("input").value.trim() !== password) {
+        error.hidden = false;
+        return;
+      }
+      error.hidden = true;
+      login.hidden = true;
+      panel.hidden = false;
+      loadContent();
+    });
+
+    document.querySelectorAll("[data-tab]").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        state.tab = tab.dataset.tab;
+        render();
+      });
+    });
+
+    document.querySelector("[data-add]").addEventListener("click", () => {
+      const item = state.tab === "photos"
+        ? { title: "NEW PHOTO", image: "", alt: "Photo image", blackAndWhite: false }
+        : { title: "NEW PROJECT", image: "", alt: "Project image", featured: false, gallery: [] };
+      state.content[state.tab].push(item);
+      render();
+    });
+
+    document.querySelector("[data-export]").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state.content, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "site-content.json";
+      link.click();
+      URL.revokeObjectURL(url);
+      setStatus("site-content.json 파일을 내려받았습니다.");
+    });
+
+    document.querySelector("[data-import]").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        state.content = JSON.parse(await file.text());
+        state.content.photos = state.content.photos || [];
+        state.content.projects = state.content.projects || [];
+        render();
+        setStatus("JSON을 불러왔습니다.");
+      } catch {
+        setStatus("JSON 형식을 확인해주세요.");
+      }
+    });
+
+    jsonArea.addEventListener("input", () => {
+      try {
+        state.content = JSON.parse(jsonArea.value);
+        setStatus("JSON 내용이 반영되었습니다.");
+      } catch {
+        status.textContent = "JSON 형식 오류가 있습니다.";
+      }
+    });
+  </script>
 </body>
 </html>
