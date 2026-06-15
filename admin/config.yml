@@ -1,0 +1,51 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+media_folder: "project-assets"
+public_folder: "/project-assets"
+publish_mode: simple
+
+site_url: "/"
+display_url: "/"
+logo_url: "/begins-logo.png"
+
+collections:
+  - name: "site_content"
+    label: "Website Content"
+    files:
+      - name: "main_content"
+        label: "Photo / Project"
+        file: "data/site-content.json"
+        format: "json"
+        fields:
+          - name: "photos"
+            label: "Photo"
+            label_singular: "Photo"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "title", label: "Title", widget: "string", required: true }
+              - { name: "image", label: "Image path or URL", widget: "string", required: true, hint: "Example: /project-assets/photo.jpg or https://..." }
+              - { name: "alt", label: "Image description", widget: "string", required: false }
+              - { name: "blackAndWhite", label: "Black and white", widget: "boolean", default: false, required: false }
+          - name: "projects"
+            label: "Project"
+            label_singular: "Project"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "title", label: "Title", widget: "string", required: true }
+              - { name: "image", label: "Thumbnail image path or URL", widget: "string", required: true, hint: "This is the first image shown when the thumbnail is clicked." }
+              - { name: "alt", label: "Image description", widget: "string", required: false }
+              - { name: "featured", label: "Featured card", widget: "boolean", default: false, required: false }
+              - name: "gallery"
+                label: "Detail images"
+                label_singular: "Detail image"
+                widget: "list"
+                required: false
+                summary: "{{fields.image}}"
+                fields:
+                  - { name: "image", label: "Image path or URL", widget: "string", required: true }
+                  - { name: "alt", label: "Image description", widget: "string", required: false }
