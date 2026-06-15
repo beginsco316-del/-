@@ -94,11 +94,13 @@
 
       <div class="admin-actions">
         <button type="button" data-add>새 항목 추가</button>
-        <button type="button" data-export>JSON 파일 다운로드</button>
+        <button type="button" data-save>임시 저장</button>
+        <button type="button" data-export>사이트 반영 파일 다운로드</button>
         <label class="import-button">
           JSON 불러오기
           <input type="file" accept=".json,application/json" data-import hidden>
         </label>
+        <button type="button" data-reset>임시 저장 지우기</button>
         <span class="admin-status" data-status></span>
       </div>
 
@@ -109,6 +111,7 @@
 
   <script>
     const password = "begins316";
+    const storageKey = "beginsdesign-admin-content";
     const state = { content: { photos: [], projects: [] }, tab: "photos" };
     const login = document.querySelector("[data-admin-login]");
     const panel = document.querySelector("[data-admin-panel]");
@@ -130,6 +133,20 @@
       setStatus.timer = window.setTimeout(() => { status.textContent = ""; }, 2600);
     };
 
+    const saveDraft = () => {
+      localStorage.setItem(storageKey, JSON.stringify(state.content));
+      setStatus("이 브라우저에 임시 저장했습니다.");
+    };
+
+    const loadDraft = () => {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved) : null;
+      } catch {
+        return null;
+      }
+    };
+
     const render = () => {
       document.querySelectorAll("[data-tab]").forEach((button) => {
         button.classList.toggle("is-active", button.dataset.tab === state.tab);
@@ -147,6 +164,7 @@
 
     const updateItem = (index, key, value) => {
       state.content[state.tab][index][key] = value;
+      localStorage.setItem(storageKey, JSON.stringify(state.content));
     };
 
     const moveItem = (index, direction) => {
@@ -154,6 +172,7 @@
       const nextIndex = index + direction;
       if (nextIndex < 0 || nextIndex >= items.length) return;
       [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
+      localStorage.setItem(storageKey, JSON.stringify(state.content));
       render();
     };
 
@@ -224,10 +243,12 @@
         button("아래로", () => moveItem(index, 1)),
         button("복제", () => {
           state.content[state.tab].splice(index + 1, 0, JSON.parse(JSON.stringify(item)));
+          saveDraft();
           render();
         }),
         button("삭제", () => {
           state.content[state.tab].splice(index, 1);
+          saveDraft();
           render();
         })
       );
@@ -258,10 +279,12 @@
         input.addEventListener("input", () => {
           galleryItem.image = input.value;
           galleryItem.alt = galleryItem.alt || item.alt || item.title || "Project image";
+          localStorage.setItem(storageKey, JSON.stringify(state.content));
         });
         input.addEventListener("change", render);
         row.append(thumb, input, button("삭제", () => {
           item.gallery.splice(galleryIndex, 1);
+          saveDraft();
           render();
         }));
         wrap.append(row);
@@ -270,6 +293,7 @@
       actions.className = "gallery-actions";
       actions.append(button("상세 이미지 추가", () => {
         item.gallery.push({ image: "", alt: item.alt || item.title || "Project image" });
+        saveDraft();
         render();
       }));
       wrap.append(actions);
@@ -277,6 +301,16 @@
     };
 
     const loadContent = async () => {
+      const draft = loadDraft();
+      if (draft) {
+        state.content = draft;
+        state.content.photos = state.content.photos || [];
+        state.content.projects = state.content.projects || [];
+        render();
+        setStatus("임시 저장된 내용을 불러왔습니다.");
+        return;
+      }
+
       try {
         const response = await fetch("../data/site-content.json", { cache: "no-store" });
         if (!response.ok) throw new Error("load failed");
@@ -313,7 +347,12 @@
         ? { title: "NEW PHOTO", image: "", alt: "Photo image", blackAndWhite: false }
         : { title: "NEW PROJECT", image: "", alt: "Project image", featured: false, gallery: [] };
       state.content[state.tab].push(item);
+      saveDraft();
       render();
+    });
+
+    document.querySelector("[data-save]").addEventListener("click", () => {
+      saveDraft();
     });
 
     document.querySelector("[data-export]").addEventListener("click", () => {
@@ -324,7 +363,8 @@
       link.download = "site-content.json";
       link.click();
       URL.revokeObjectURL(url);
-      setStatus("site-content.json 파일을 내려받았습니다.");
+      saveDraft();
+      setStatus("site-content.json 파일을 내려받았습니다. 이 파일을 GitHub의 data/site-content.json과 교체하세요.");
     });
 
     document.querySelector("[data-import]").addEventListener("change", async (event) => {
@@ -334,6 +374,7 @@
         state.content = JSON.parse(await file.text());
         state.content.photos = state.content.photos || [];
         state.content.projects = state.content.projects || [];
+        saveDraft();
         render();
         setStatus("JSON을 불러왔습니다.");
       } catch {
@@ -344,10 +385,16 @@
     jsonArea.addEventListener("input", () => {
       try {
         state.content = JSON.parse(jsonArea.value);
+        saveDraft();
         setStatus("JSON 내용이 반영되었습니다.");
       } catch {
         status.textContent = "JSON 형식 오류가 있습니다.";
       }
+    });
+
+    document.querySelector("[data-reset]").addEventListener("click", () => {
+      localStorage.removeItem(storageKey);
+      setStatus("임시 저장을 지웠습니다. 새로고침하면 원래 JSON을 다시 불러옵니다.");
     });
   </script>
 </body>
