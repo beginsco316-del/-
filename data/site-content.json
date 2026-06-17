@@ -184,47 +184,23 @@
     },
     {
       "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/0LPNDMlNuDxqrDR7yL853Q9qKjPUwptUmMI2_ENzgVlki2aXHVdPmZ1sYjK-dAd7yOEzFRSSOMrtGyv_2IOuMxwVQxSg-tlZodqKTgIj82KEicxlNrM0=s0",
-      "alt": "GYM interior project",
-      "featured": false,
-      "gallery": []
-    },
-    {
-      "title": "PILATES STUDIO",
-      "image": "https://lh3.googleusercontent.com/I6deZTxpsutM4ws208zFcYbx9kMkMJF-TBM0G6wY9lu4E-gDMPlG5wxhNSC8808dRxLSzGXJ82ven0cYb7qtyobjCjGx2JcFTcmz91fjWnW_XXeXUzOE-Q=s0",
-      "alt": "PILATES STUDIO interior project",
-      "featured": false,
-      "gallery": []
-    },
-    {
-      "title": "PILATES STUDIO",
-      "image": "https://lh3.googleusercontent.com/oMBN_Fgr2Z41Opw_E99868HICK7-VNew_knAPF4N-bxOKiRGA8FtitM2UxmHCdesKPHb8CxGehT18V1MnOSas1vIIPM5If1SmWFbBRk_nz5XEIUgX4GQlQ=s0",
-      "alt": "PILATES STUDIO interior project",
-      "featured": false,
-      "gallery": []
-    },
-    {
-      "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/hVOrnuhFw7s7wonppz0Udvc-lo3JuZAX_c5vg8uV_LFrEXR4X9INV4qXUJqg8G8F9l-5XOgM8VDLSepKoyO3e-NhJndXNoWn2mVcKVgc6w4PS3j3j7WwlJs=s0",
+      "image": "https://lh3.googleusercontent.com/5U8T0L8HpXVMmUWau6RwwaOz5E_9qkOaKH0tqxB5mQBxH6ITWDPGRgnRSFIWx_Na_zB4ta-raz8jaPvfvmTCcVyHMCmPC1QyeKS9bkEUiZOpeUw6J-iPxQ=s0",
       "alt": "GYM interior project",
       "featured": false,
       "gallery": [
         {
-          "image": "https://lh3.googleusercontent.com/hq5WlJd0CJaOFK8pqykdJ-DtVIi5_9fWH6luFXps_TksV0rpwW1ouz9K0uhLgF8xfACkhMDU7QTIA2MwwTTxD36Mx_Uv8NvWvXPiK8b6UuJPh7RWMjQMOw=s0",
+          "image": "https://lh3.googleusercontent.com/I6deZTxpsutM4ws208zFcYbx9kMkMJF-TBM0G6wY9lu4E-gDMPlG5wxhNSC8808dRxLSzGXJ82ven0cYb7qtyobjCjGx2JcFTcmz91fjWnW_XXeXUzOE-Q=s0",
           "alt": "GYM interior project"
         },
         {
-          "image": "https://lh3.googleusercontent.com/xi_7G4h7uSEkxSzTrvTB8mkI9bBZqd9oa7Wm616xW75iz7G7YdTly2RGlrSTnqUx_4yI2losbWjFr-bwU4BeM27RrgxtuCT0O7x2KHe4kp5HRhDH0OzRiL0=s0",
+          "image": "https://lh3.googleusercontent.com/oMBN_Fgr2Z41Opw_E99868HICK7-VNew_knAPF4N-bxOKiRGA8FtitM2UxmHCdesKPHb8CxGehT18V1MnOSas1vIIPM5If1SmWFbBRk_nz5XEIUgX4GQlQ=s0",
+          "alt": "GYM interior project"
+        },
+        {
+          "image": "https://lh3.googleusercontent.com/hVOrnuhFw7s7wonppz0Udvc-lo3JuZAX_c5vg8uV_LFrEXR4X9INV4qXUJqg8G8F9l-5XOgM8VDLSepKoyO3e-NhJndXNoWn2mVcKVgc6w4PS3j3j7WwlJs=s0",
           "alt": "GYM interior project"
         }
       ]
-    },
-    {
-      "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/5U8T0L8HpXVMmUWau6RwwaOz5E_9qkOaKH0tqxB5mQBxH6ITWDPGRgnRSFIWx_Na_zB4ta-raz8jaPvfvmTCcVyHMCmPC1QyeKS9bkEUiZOpeUw6J-iPxQ=s0",
-      "alt": "GYM interior project",
-      "featured": false,
-      "gallery": []
     },
     {
       "title": "OFFICE",
@@ -247,7 +223,7 @@
       ]
     },
     {
-      "title": "PILATES STUDIO",
+      "title": "",
       "image": "https://lh3.googleusercontent.com/VIAmakeS_tQnXGc6vHUMD8bEY23L-m3L-xQnF9ARrCzvnsTHQ-xtx9JqII9xiBwinsv_ftiRSGHxeByZLnWXGKHJa5Ve7ojvEdI0VUDuCIdlmS1PkHzcyg=s0",
       "alt": "PILATES STUDIO interior project",
       "featured": false,
@@ -332,38 +308,32 @@
     },
     {
       "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/BYwaH_7FOtV5wSJHRk5CK6JsHy4UtKfKkYN-zZkMz3AxXc6b911i76VUoqpyNMdacb5Jd79oXIV2fGlikVyXS-7lPHvQw0_Nswd6-OIdg7U7gL5aqMjMmQ=s0",
+      "image": "https://lh3.googleusercontent.com/4P7WndKU5j5fmfc5CbD5mbH2z3nIJZwfqazM5jY1uuvZaQBPlz9aNazqaEqfhaeRqMsce5nBL67Xfgcy2ZLqPZYeX42uTYRVKrSNRaHUxuult2B5Pacn=s0",
       "alt": "GYM interior project",
       "featured": false,
       "gallery": [
         {
+          "image": "https://lh3.googleusercontent.com/BYwaH_7FOtV5wSJHRk5CK6JsHy4UtKfKkYN-zZkMz3AxXc6b911i76VUoqpyNMdacb5Jd79oXIV2fGlikVyXS-7lPHvQw0_Nswd6-OIdg7U7gL5aqMjMmQ=s0",
+          "alt": "GYM interior project"
+        },
+        {
           "image": "https://lh3.googleusercontent.com/P-6rCQfyRvGVIq_FrOTtrBtWa193mCzAESIX-G6b15OdAMuj7sdtphgZ8q_rQtB8-rcBJk6DdQKjVJCRPKSHtoPecqp15GVbwuRbUtRw2Wwq5iZURnTr5is=s0",
+          "alt": "GYM interior project"
+        },
+        {
+          "image": "https://lh3.googleusercontent.com/C3R82y48jT_rTjj3S382BZiCd4LzoCXve9hacTUjsGmvfrYYsHA4t53KMdxJwISiOGcYcSg3UQId2qLrRsvMlatTb5NKWQg3AC--FfzjEPqr47FzphZw_Jg=s0",
           "alt": "GYM interior project"
         }
       ]
     },
     {
-      "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/4P7WndKU5j5fmfc5CbD5mbH2z3nIJZwfqazM5jY1uuvZaQBPlz9aNazqaEqfhaeRqMsce5nBL67Xfgcy2ZLqPZYeX42uTYRVKrSNRaHUxuult2B5Pacn=s0",
-      "alt": "GYM interior project",
-      "featured": false,
-      "gallery": []
-    },
-    {
-      "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/C3R82y48jT_rTjj3S382BZiCd4LzoCXve9hacTUjsGmvfrYYsHA4t53KMdxJwISiOGcYcSg3UQId2qLrRsvMlatTb5NKWQg3AC--FfzjEPqr47FzphZw_Jg=s0",
-      "alt": "GYM interior project",
-      "featured": false,
-      "gallery": []
-    },
-    {
-      "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/ZhIVGc8gAXLgtV3UpFXckY0miSYkRav4-2_-vfBchVm_IzIHMNwydzKsg_xZsF_RcG_V26TOox14dCPJrT-4TMtWXZrskpw4Jel6XwgkD2b_UFKDOfSC=s0",
+      "title": "PILATES STUDIO",
+      "image": "https://lh3.googleusercontent.com/wcDCgwtW1wgjTP497hqnnY7-ZC8h9DWkdtgP6uynMu28WgI1r1jrnk-3KnOYt71eyWLSoTPLfXOuVLyK1ISIXddQMH8eyQVfgZnpVjnGzOrkWUuDPcil=s0",
       "alt": "GYM interior project",
       "featured": false,
       "gallery": [
         {
-          "image": "https://lh3.googleusercontent.com/wcDCgwtW1wgjTP497hqnnY7-ZC8h9DWkdtgP6uynMu28WgI1r1jrnk-3KnOYt71eyWLSoTPLfXOuVLyK1ISIXddQMH8eyQVfgZnpVjnGzOrkWUuDPcil=s0",
+          "image": "https://lh3.googleusercontent.com/ZhIVGc8gAXLgtV3UpFXckY0miSYkRav4-2_-vfBchVm_IzIHMNwydzKsg_xZsF_RcG_V26TOox14dCPJrT-4TMtWXZrskpw4Jel6XwgkD2b_UFKDOfSC=s0",
           "alt": "GYM interior project"
         },
         {
@@ -382,7 +352,7 @@
     },
     {
       "title": "GYM",
-      "image": "https://lh3.googleusercontent.com/fnkNQk_s8t98gJAim6q2-N72oRLEulA1j6UXVbf6Z2SxiMuWCIp8DscWudA65mcCtTpO3PIT0HjvJCp5TwWW60zfKO-vSx1AL9i6_-X7WdapVyWVeCi1cg=s0",
+      "image": "https://lh3.googleusercontent.com/jItDWJXZnbgoJo9ffGB5Ex1_X3xZpze_fH8FvyRVgLiL_mrbs7O7mRZ2jvablZDDMAT60U80SwCgVjFaly4owSX5AzExzeRskasQfrnP5Yx_GKD7S7g6aA=s0",
       "alt": "GYM interior project",
       "featured": false,
       "gallery": [
@@ -395,7 +365,7 @@
           "alt": "GYM interior project"
         },
         {
-          "image": "https://lh3.googleusercontent.com/jItDWJXZnbgoJo9ffGB5Ex1_X3xZpze_fH8FvyRVgLiL_mrbs7O7mRZ2jvablZDDMAT60U80SwCgVjFaly4owSX5AzExzeRskasQfrnP5Yx_GKD7S7g6aA=s0",
+          "image": "https://lh3.googleusercontent.com/fnkNQk_s8t98gJAim6q2-N72oRLEulA1j6UXVbf6Z2SxiMuWCIp8DscWudA65mcCtTpO3PIT0HjvJCp5TwWW60zfKO-vSx1AL9i6_-X7WdapVyWVeCi1cg=s0",
           "alt": "GYM interior project"
         }
       ]
@@ -424,6 +394,10 @@
         },
         {
           "image": "https://lh3.googleusercontent.com/79jDKP_af3gAgXGxwz5hM9jAErtL76ISRrblogQUnC3A1fTvpBJNXCWTj_kgS_zwGqMgQhn9t9zKpGl2gmZVxdmKx6oLKVgRmZIbO8Q1ur_lqgjoGYxWHZY=s0",
+          "alt": "SHOP interior project"
+        },
+        {
+          "image": "https://lh3.googleusercontent.com/YEBMdFJS9xSVhEAxu2lUvdSlixtZjzHKPj_9rGj3W9QIVAui1aMpTrVTUu22CvB7E2vlm3VtX7koV8TWVR9Z9D9wMJ4PEKTQdtouIQTWHoh13aZTDrjeAg=s0",
           "alt": "SHOP interior project"
         }
       ]
@@ -529,13 +503,6 @@
           "alt": "OFFICE interior project"
         }
       ]
-    },
-    {
-      "title": "SHOP",
-      "image": "https://lh3.googleusercontent.com/YEBMdFJS9xSVhEAxu2lUvdSlixtZjzHKPj_9rGj3W9QIVAui1aMpTrVTUu22CvB7E2vlm3VtX7koV8TWVR9Z9D9wMJ4PEKTQdtouIQTWHoh13aZTDrjeAg=s0",
-      "alt": "SHOP interior project",
-      "featured": false,
-      "gallery": []
     },
     {
       "title": "STUDIO",
