@@ -46,7 +46,7 @@
       "title": "TGDC",
       "image": "/project-assets/TGDC--146%20%EB%B3%B5%EC%82%AC.jpg",
       "alt": "TGDC ?쇱슫吏? ?ㅽ뵾???낃뎄",
-      "blackAndWhite": false
+      "blackAndWhite": true
     },
     {
       "title": "HANGIL",
@@ -74,6 +74,62 @@
     }
   ],
   "projects": [
+    {
+      "title": "OFFICE",
+      "image": "TGDC--54 복사.jpg",
+      "alt": "OFFICE interior project",
+      "featured": false,
+      "gallery": [
+        {
+          "image": "TGDC--10 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--126 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--143 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--146 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--164 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--170 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--178 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--27 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--58 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--76 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--85 복사.jpg",
+          "alt": "OFFICE interior project"
+        },
+        {
+          "image": "TGDC--200 복사.jpg",
+          "alt": "OFFICE interior project"
+        }
+      ]
+    },
     {
       "title": "GYM",
       "image": "/project-assets/KakaoTalk_20260425_113306328.jpg",
