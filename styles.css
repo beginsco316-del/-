@@ -373,16 +373,26 @@ p {
 
 .about-section .license-note {
   margin-top: 18px;
-  padding-left: 18px;
-  border-left: 3px solid var(--accent);
-  color: var(--text);
-  font-weight: 700;
+  max-width: 780px;
+  color: var(--muted);
   word-break: keep-all;
 }
 
+.about-section .license-note p {
+  margin: 0 0 10px;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1.76;
+  font-weight: 400;
+}
+
+.about-section .license-note p:last-child {
+  margin-bottom: 0;
+}
+
 .about-section .license-note strong {
-  color: var(--accent);
-  font-weight: 900;
+  color: inherit;
+  font-weight: 400;
 }
 
 .section-heading > p {
