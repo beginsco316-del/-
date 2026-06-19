@@ -388,11 +388,13 @@ p {
 
 .about-section .license-note p:last-child {
   margin-bottom: 0;
+  font-size: 17px;
+  font-weight: 800;
 }
 
 .about-section .license-note strong {
   color: inherit;
-  font-weight: 400;
+  font-weight: inherit;
 }
 
 .section-heading > p {
