@@ -29,6 +29,8 @@
       background: rgba(255, 255, 255, 0.78); border: 1px solid rgba(22, 23, 19, 0.1); border-radius: 8px;
     }
     .editor-preview { overflow: hidden; align-self: start; background: #e8e8e2; border-radius: 8px; aspect-ratio: 4 / 3; }
+    .drag-handle { cursor: grab; user-select: none; touch-action: manipulation; }
+    .drop-target { outline: 2px solid var(--green-dark); outline-offset: 2px; }
     .editor-preview img { width: 100%; height: 100%; object-fit: cover; }
     .editor-fields { display: grid; gap: 10px; }
     .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -96,6 +98,7 @@
         <span class="admin-status" role="status" data-status></span>
       </div>
 
+      <p>순서 변경 손잡이를 끌어서 놓거나 위로·아래로 버튼을 누르세요.</p>
       <div class="admin-list" data-list></div>
     </section>
   </main>
@@ -162,13 +165,48 @@
       state.content[state.tab][index][key] = value;
     };
 
-    const moveItem = (index, direction) => {
-      const items = state.content[state.tab];
-      const nextIndex = index + direction;
-      if (nextIndex < 0 || nextIndex >= items.length) return;
-      [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
+    function moveItem(items, from, to) {
+      if (to < 0 || to >= items.length || from === to) return;
+      const [item] = items.splice(from, 1);
+      items.splice(to, 0, item);
       render();
-    };
+      setStatus("순서를 바꿨습니다. 홈페이지에 저장을 눌러 반영하세요.");
+    }
+
+    let dragging;
+    function orderControls(row, items, index) {
+      const handle = document.createElement("span");
+      handle.className = "drag-handle";
+      handle.textContent = "⠿ 순서 변경";
+      handle.draggable = true;
+      handle.addEventListener("dragstart", (event) => {
+        dragging = { items, index };
+        event.dataTransfer.setData("text/plain", "photo-order");
+        event.dataTransfer.effectAllowed = "move";
+      });
+      handle.addEventListener("dragend", () => { dragging = undefined; });
+      row.addEventListener("dragover", (event) => {
+        if (dragging?.items !== items) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.dataTransfer.dropEffect = "move";
+        row.classList.add("drop-target");
+      });
+      row.addEventListener("dragleave", (event) => {
+        if (!row.contains(event.relatedTarget)) row.classList.remove("drop-target");
+      });
+      row.addEventListener("drop", (event) => {
+        if (dragging?.items !== items) return;
+        event.preventDefault();
+        event.stopPropagation();
+        row.classList.remove("drop-target");
+        moveItem(items, dragging.index, index);
+        dragging = undefined;
+      });
+      const up = button("위로", () => moveItem(items, index, index - 1));
+      const down = button("아래로", () => moveItem(items, index, index + 1));
+      return [handle, up, down];
+    }
 
     const button = (text, onClick) => {
       const element = document.createElement("button");
@@ -233,8 +271,7 @@
       actions.className = "admin-row-actions";
       actions.append(
         replacement(item),
-        button("위로", () => moveItem(index, -1)),
-        button("아래로", () => moveItem(index, 1)),
+        ...orderControls(card, state.content[state.tab], index),
         button("복제", () => {
           state.content[state.tab].splice(index + 1, 0, JSON.parse(JSON.stringify(item)));
           render();
@@ -273,11 +310,14 @@
           galleryItem.image = input.value;
           galleryItem.alt = galleryItem.alt || item.alt || item.title || "Project image";
         });
-        row.append(thumb, input, replacement(galleryItem), button("삭제", () => {
+        const controls = document.createElement("div");
+        controls.className = "admin-row-actions";
+        controls.append(...orderControls(row, item.gallery, galleryIndex), button("삭제", () => {
           if (!confirm("이 사진을 홈페이지에서 삭제할까요?")) return;
           item.gallery.splice(galleryIndex, 1);
           render();
         }));
+        row.append(thumb, input, replacement(galleryItem), controls);
         wrap.append(row);
       });
       const actions = document.createElement("div");
@@ -339,6 +379,7 @@
       const files = Array.from(uploads).filter(([path]) => usedPaths.has(path))
         .map(([path, upload]) => [path.slice(1), upload]);
       const controls = panel.querySelectorAll("button, input, textarea");
+      panel.inert = true;
       controls.forEach((control) => { control.disabled = true; });
       setStatus("홈페이지에 저장하고 있습니다…");
       try {
@@ -350,6 +391,7 @@
       } catch (failure) {
         setStatus(failure.message);
       } finally {
+        panel.inert = false;
         controls.forEach((control) => { control.disabled = false; });
       }
     });
