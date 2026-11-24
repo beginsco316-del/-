@@ -93,7 +93,8 @@
       </div>
 
       <div class="admin-actions">
-        <button type="button" data-add>새 항목 추가</button>
+        <button type="button" data-add>사진 추가</button>
+        <input type="file" data-new-photo hidden>
         <button type="button" data-save>홈페이지에 저장</button>
         <span class="admin-status" role="status" data-status></span>
       </div>
@@ -129,37 +130,75 @@
       document.querySelectorAll("[data-tab]").forEach((button) => {
         button.classList.toggle("is-active", button.dataset.tab === state.tab);
       });
+      document.querySelector("[data-add]").textContent = state.tab === "photos" ? "사진 추가" : "프로젝트 추가";
       const items = state.content[state.tab];
       list.replaceChildren(...items.map(createEditorCard));
       if (!items.length) list.textContent = "등록된 사진이 없습니다.";
     };
 
-    const replacement = (item) => {
-      const label = document.createElement("label");
-      label.className = "import-button";
-      label.append("사진 교체");
+    const maxUploadBytes = 4 * 1024 * 1024;
+    const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
+    const pickerTypes = "image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif,.heic,.heif";
+
+    async function preparePhoto(file) {
+      if (acceptedTypes.includes(file.type) && file.size > 0 && file.size <= maxUploadBytes) {
+        return file;
+      }
+      const bitmap = await createImageBitmap(file);
+      try {
+        const canvas = document.createElement("canvas");
+        const scale = Math.min(1, 2200 / Math.max(bitmap.width, bitmap.height));
+        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+        const context = canvas.getContext("2d", { alpha: false });
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        for (const quality of [0.88, 0.72, 0.55]) {
+          const image = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+          if (image && image.size <= maxUploadBytes) return image;
+        }
+        throw new Error("Photo exceeds upload limit");
+      } finally {
+        bitmap.close();
+      }
+    }
+
+    function photoPicker(label, onSelect) {
       const input = document.createElement("input");
       input.type = "file";
-      input.accept = "image/jpeg,image/png,image/webp";
-      input.setAttribute("aria-label", "사진 교체");
-      input.addEventListener("change", () => {
+      input.accept = pickerTypes;
+      input.setAttribute("aria-label", label);
+      input.addEventListener("change", async () => {
         const file = input.files[0];
         if (!file) return;
-        const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[file.type];
-        if (!extension || !file.size || file.size > 4 * 1024 * 1024) {
-          setStatus("4MB 이하의 JPG, PNG 또는 WebP 사진을 선택해주세요.");
+        const save = document.querySelector("[data-save]");
+        save.disabled = true;
+        setStatus("사진을 준비하고 있습니다…");
+        try {
+          const prepared = await preparePhoto(file);
+          const path = "/managed-photos/" + crypto.randomUUID();
+          uploads.set(path, { file: prepared, preview: URL.createObjectURL(prepared) });
+          onSelect(path, file);
+          setStatus("사진을 선택했습니다. 홈페이지에 저장을 눌러 반영하세요.");
+          render();
+        } catch {
+          setStatus("이 사진을 열 수 없습니다. JPG, PNG 또는 WebP로 변환한 뒤 다시 선택해주세요.");
           input.value = "";
-          return;
+        } finally {
+          save.disabled = false;
         }
-        const path = "/managed-photos/" + crypto.randomUUID();
-        uploads.set(path, { file, preview: URL.createObjectURL(file) });
-        item.image = path;
-        setStatus("사진을 선택했습니다. 홈페이지에 저장을 눌러 반영하세요.");
-        render();
       });
-      label.append(input);
+      return input;
+    }
+
+    function replacement(item) {
+      const label = document.createElement("label");
+      label.className = "import-button";
+      const text = item.image ? "사진 교체" : "사진 선택";
+      label.append(text, photoPicker(text, (path) => { item.image = path; }));
       return label;
-    };
+    }
 
     const updateItem = (index, key, value) => {
       state.content[state.tab][index][key] = value;
@@ -359,11 +398,20 @@
       });
     });
 
+    const newPhoto = photoPicker("새 사진 선택", (path, file) => {
+      const title = file.name.replace(/\.[^.]+$/, "") || "새 사진";
+      state.content.photos.push({ title, image: path, alt: title, blackAndWhite: false });
+      newPhoto.value = "";
+    });
+    newPhoto.hidden = true;
+    document.querySelector("[data-new-photo]").replaceWith(newPhoto);
+
     document.querySelector("[data-add]").addEventListener("click", () => {
-      const item = state.tab === "photos"
-        ? { title: "NEW PHOTO", image: "", alt: "Photo image", blackAndWhite: false }
-        : { title: "NEW PROJECT", image: "", alt: "Project image", featured: false, gallery: [] };
-      state.content[state.tab].push(item);
+      if (state.tab === "photos") {
+        newPhoto.click();
+        return;
+      }
+      state.content.projects.push({ title: "새 프로젝트", image: "", alt: "", featured: false, gallery: [] });
       render();
     });
 
