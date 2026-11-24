@@ -11,3 +11,14 @@
   for = "/admin/*"
   [headers.values]
     X-Robots-Tag = "noindex"
+
+[[redirects]]
+  from = "/manage-photos"
+  to = "/manage-photos.html"
+  status = 200
+  force = true
+
+[[headers]]
+  for = "/manage-photos"
+  [headers.values]
+    X-Robots-Tag = "noindex"
