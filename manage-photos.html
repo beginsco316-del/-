@@ -63,14 +63,14 @@
       <img src="/begins-logo.png" alt="BEGIN.S DESIGN 로고">
       <p class="section-kicker">Admin</p>
       <h1>관리자 페이지</h1>
-      <p>이 저장소의 콘텐츠 읽기·쓰기 권한이 있는 GitHub 토큰으로 연결해주세요.</p>
+      <p>관리자 비밀번호를 입력해주세요.</p>
       <form class="admin-password-form" data-login-form>
         <label>
-          <span>GitHub 토큰</span>
-          <input type="password" autocomplete="off" required>
+          <span>관리자 비밀번호</span>
+          <input type="password" autocomplete="current-password" maxlength="256" required>
         </label>
         <button type="submit">들어가기</button>
-        <small class="admin-error" hidden>GitHub 연결을 확인해주세요.</small>
+        <small class="admin-error" hidden>관리자 비밀번호를 확인해주세요.</small>
       </form>
       <a class="admin-home-link" href="/">홈으로 돌아가기</a>
     </section>
@@ -137,19 +137,18 @@
       label.append("사진 교체");
       const input = document.createElement("input");
       input.type = "file";
-      input.accept = "image/jpeg,image/png,image/webp,image/gif,image/avif";
+      input.accept = "image/jpeg,image/png,image/webp";
       input.setAttribute("aria-label", "사진 교체");
       input.addEventListener("change", () => {
         const file = input.files[0];
         if (!file) return;
-        const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp",
-          "image/gif": "gif", "image/avif": "avif" }[file.type];
-        if (!extension || !file.size || file.size > 10 * 1024 * 1024) {
-          setStatus("10MB 이하의 JPG, PNG, WebP, GIF 또는 AVIF 사진을 선택해주세요.");
+        const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[file.type];
+        if (!extension || !file.size || file.size > 4 * 1024 * 1024) {
+          setStatus("4MB 이하의 JPG, PNG 또는 WebP 사진을 선택해주세요.");
           input.value = "";
           return;
         }
-        const path = "/project-assets/uploads/" + crypto.randomUUID() + "." + extension;
+        const path = "/managed-photos/" + crypto.randomUUID();
         uploads.set(path, { file, preview: URL.createObjectURL(file) });
         item.image = path;
         setStatus("사진을 선택했습니다. 홈페이지에 저장을 눌러 반영하세요.");
@@ -298,7 +297,7 @@
       submit.disabled = true;
       error.hidden = true;
       try {
-        const connection = createPublisher(input.value.trim());
+        const connection = createPublisher(input.value);
         state.content = await connection.load();
         publisher = connection;
         login.hidden = true;
@@ -341,12 +340,12 @@
         .map(([path, upload]) => [path.slice(1), upload]);
       const controls = panel.querySelectorAll("button, input, textarea");
       controls.forEach((control) => { control.disabled = true; });
-      setStatus("GitHub에 저장하고 있습니다…");
+      setStatus("홈페이지에 저장하고 있습니다…");
       try {
         await publisher.publish(state.content, files);
         for (const { preview } of uploads.values()) URL.revokeObjectURL(preview);
         uploads.clear();
-        setStatus("저장했습니다. Netlify 배포가 완료되면 홈페이지에 반영됩니다.");
+        setStatus("저장했습니다. 홈페이지에 반영됐습니다.");
         render();
       } catch (failure) {
         setStatus(failure.message);

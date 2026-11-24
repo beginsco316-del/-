@@ -149,6 +149,15 @@ const bindGalleryClicks = () => {
 
 const loadSiteContent = async () => {
   try {
+    const live = await fetch("/api/photo-content", { cache: "no-store" });
+    if (!live.ok && live.status !== 404) throw new Error("Photo storage unavailable");
+    const current = live.ok ? (await live.json()).content : null;
+    if (current) {
+      renderPhotos(current.photos);
+      renderProjects(current.projects);
+      bindGalleryClicks();
+      return;
+    }
     const response = await fetch("./data/site-content.json", { cache: "no-store" });
 
     if (!response.ok) {

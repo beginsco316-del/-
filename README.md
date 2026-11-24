@@ -1,12 +1,9 @@
 # BEGIN.S DESIGN Website
 
-The Netlify deployment publishes this repository's main branch.
+Netlify publishes the main branch. The build bundles the photo API and copies the public website files.
 
 ## 홈페이지 사진 관리
 
-1. 홈페이지 상단의 설정 아이콘으로 사진 관리 페이지를 엽니다.
-2. GitHub에서 이 저장소만 선택하고 **Contents: Read and write** 권한을 지정한 fine-grained personal access token으로 연결합니다.
-3. Photo 또는 Project에서 사진 교체를 눌러 파일을 선택하거나 삭제를 누릅니다.
-4. 홈페이지에 저장을 누르면 사진 파일과 목록이 한 커밋으로 저장됩니다. Netlify 배포가 완료되면 홈페이지에서 변경 내용을 확인할 수 있습니다.
+Netlify의 환경 변수에 `PHOTO_ADMIN_PASSWORD`를 등록합니다. 16자 이상의 고유한 비밀번호를 사용하고, Functions 범위와 Production 배포 환경에 적용합니다. 환경 변수를 변경한 뒤 새로 배포합니다.
 
-토큰은 현재 관리자 탭에서만 사용합니다. 저장소나 브라우저 저장소에 저장하지 않습니다.
+홈페이지의 설정 버튼을 누르고 관리자 비밀번호를 입력합니다. Photo 또는 Project에서 사진을 교체하거나 삭제한 뒤 홈페이지에 저장을 누릅니다. 새 사진과 목록은 Netlify Blobs에 저장되며, 저장을 마치면 홈페이지에 바로 반영됩니다.

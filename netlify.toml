@@ -1,5 +1,7 @@
 [build]
-  publish = "."
+  command = "node build-photos.mjs"
+  publish = "public"
+  functions = ".photo-functions"
 
 [[headers]]
   for = "/*"
